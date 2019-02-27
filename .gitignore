@@ -1,0 +1,5 @@
+# this is ignore file for git
+/bin
+/src/github.com
+/src/golang.org
+/src/bin
