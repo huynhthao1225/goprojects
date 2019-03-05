@@ -28,18 +28,6 @@ type Person struct {
 	Lastname  string
 }
 
-func (p Person) ServeHTTP(w http.ResponseWriter, req *http.Request) {
-
-	js, err := json.Marshal(p)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-
-	w.Header().Set("Content-Type", "application/json")
-	w.Write(js)
-}
-
 //Book has title and author
 type Book struct {
 	Title  string
@@ -62,7 +50,11 @@ func main() {
 	thandler := &timeHandler{format: time.RFC1123}
 	router.Handle("/time/", thandler)
 
-	person := &Person{"Thao", "Huynht"}
+	//person := &Person{"Thao", "Huynht"}
+	person := new(Person)
+	person.Firstname = "Thao"
+	person.Lastname = "Huynh"
+
 	router.Handle("/me/", person)
 
 	book := new(Book)
@@ -80,4 +72,16 @@ func hello(rw http.ResponseWriter, req *http.Request) {
 }
 func ping(rw http.ResponseWriter, req *http.Request) {
 	fmt.Fprintf(rw, "pong Pong ...")
+}
+
+func (p Person) ServeHTTP(w http.ResponseWriter, req *http.Request) {
+
+	js, err := json.Marshal(p)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(js)
 }
