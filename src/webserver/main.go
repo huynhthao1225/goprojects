@@ -5,6 +5,9 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
+	"os/signal"
+	"syscall"
 	"time"
 )
 
@@ -45,7 +48,15 @@ func (b Book) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 	w.Write(js)
 
 }
+
+var c chan os.Signal
+
 func main() {
+	c = make(chan os.Signal)
+	signal.Notify(c, os.Interrupt, syscall.SIGTERM)
+
+	go iamdying()
+
 	router := http.NewServeMux()
 	thandler := &timeHandler{format: time.RFC1123}
 	router.Handle("/time/", thandler)
@@ -64,6 +75,8 @@ func main() {
 
 	router.HandleFunc("/", hello)
 	router.HandleFunc("/ping", ping)
+
+	router.HandleFunc("/stopme", stopme)
 	log.Fatal(http.ListenAndServe(":8080", router))
 }
 
@@ -84,4 +97,19 @@ func (p Person) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
 	w.Write(js)
+}
+
+func stopme(rw http.ResponseWriter, req *http.Request) {
+	c <- os.Interrupt
+}
+
+func iamdying() {
+	sig := <-c
+	cleanup(sig)
+	os.Exit(1)
+}
+
+func cleanup(sig os.Signal) {
+	fmt.Println("some one hit ctrl-c")
+	fmt.Println(sig)
 }

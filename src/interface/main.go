@@ -74,6 +74,7 @@ func main() {
 
 func printGreeting(b bot) {
 	fmt.Println(b.getGreeting())
+
 }
 
 func printValue(b bot) {
