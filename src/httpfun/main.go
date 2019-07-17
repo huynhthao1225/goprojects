@@ -20,7 +20,7 @@ func main() {
 	}()
 
 	myrouter := MyServer{http.NewServeMux()}
-	myrouter.MyRoutes()
+	myrouter.InitializeRoutes()
 	log.Fatal(http.ListenAndServe(":8080", myrouter.myrouters))
 
 }

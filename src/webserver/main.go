@@ -50,12 +50,14 @@ func (b Book) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 }
 
 var c chan os.Signal
+var c1 chan http.ResponseWriter
 
 func main() {
 	c = make(chan os.Signal)
 	signal.Notify(c, os.Interrupt, syscall.SIGTERM)
 
 	go iamdying()
+	go keepFeeding()
 
 	router := http.NewServeMux()
 	thandler := &timeHandler{format: time.RFC1123}
@@ -77,6 +79,7 @@ func main() {
 	router.HandleFunc("/ping", ping)
 
 	router.HandleFunc("/stopme", stopme)
+	router.HandleFunc("/funSlice", funSlice)
 	log.Fatal(http.ListenAndServe(":8080", router))
 }
 
@@ -100,9 +103,24 @@ func (p Person) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 }
 
 func stopme(rw http.ResponseWriter, req *http.Request) {
+
+	fmt.Fprintf(rw, "I am about to be terminated")
+	c1 <- rw
+	//	time.Sleep(1000 * time.Millisecond)
 	c <- os.Interrupt
+	close(c1)
+	close(c)
 }
 
+func keepFeeding() {
+	rw := <-c1
+
+	if rw != nil {
+		fmt.Fprintln(rw, "I am here ...")
+	}
+	fmt.Println("I am here")
+
+}
 func iamdying() {
 	sig := <-c
 	cleanup(sig)
@@ -110,6 +128,18 @@ func iamdying() {
 }
 
 func cleanup(sig os.Signal) {
-	fmt.Println("some one hit ctrl-c")
-	fmt.Println(sig)
+	fmt.Printf("some one ask me to terminate with signal %s\n", sig)
+}
+
+func funSlice(rw http.ResponseWriter, req *http.Request) {
+	names := []string{"value1", "value2", "value3"}
+	writeSlice(rw, "values", names)
+
+}
+
+func writeSlice(rw http.ResponseWriter, firstone string, values []string) {
+	fmt.Fprintln(rw, firstone)
+	for _, value := range values {
+		rw.Write([]byte(value))
+	}
 }

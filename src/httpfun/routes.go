@@ -12,7 +12,9 @@ type MyServer struct {
 func Preparedata(s string) string {
 	return "Preparedata for " + s
 }
-func (s *MyServer) MyRoutes() {
+
+// This is main function to initialize all http routes
+func (s *MyServer) InitializeRoutes() {
 	s.myrouters.HandleFunc("/api/", s.handleAPI())
 	s.myrouters.HandleFunc("/about", s.handleAbout())
 	s.myrouters.HandleFunc("/", s.handleIndex())
