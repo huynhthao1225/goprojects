@@ -1,0 +1,13 @@
+{
+    "connectionProperties": [
+        {
+            "driver": "mysql",
+            "user": "user1",
+            "password": "Mtvh11MySql",
+            "protocol": "tcp",
+            "host": "127.0.0.1",
+            "port": "3306",
+            "database": "sakila"
+        }
+    ]
+}
