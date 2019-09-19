@@ -1,23 +1,27 @@
-package main
+package controllers
 
 import (
 	"fmt"
 	"net/http"
 )
 
+// MyServer is structure
 type MyServer struct {
-	myrouters *http.ServeMux
+	Myrouters *http.ServeMux
 }
 
+// Preparedata function is to return "Prepareddata for + input string"
 func Preparedata(s string) string {
 	return "Preparedata for " + s
 }
 
-// This is main function to initialize all http routes
+// InitializeRoutes is main function to initialize all http routes
 func (s *MyServer) InitializeRoutes() {
-	s.myrouters.HandleFunc("/api/", s.handleAPI())
-	s.myrouters.HandleFunc("/about", s.handleAbout())
-	s.myrouters.HandleFunc("/", s.handleIndex())
+	s.Myrouters.HandleFunc("/api/", s.handleAPI())
+	s.Myrouters.HandleFunc("/about", s.handleAbout())
+	s.Myrouters.HandleFunc("/", s.handleIndex())
+	http.
+	//	s.Myrouters.PathPrefix("/static/").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir("./static"))))
 }
 
 func (s *MyServer) handleAPI() http.HandlerFunc {

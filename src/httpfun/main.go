@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"httpfun/controllers"
 	"log"
 	"net/http"
 	"os"
@@ -19,9 +20,9 @@ func main() {
 		os.Exit(1)
 	}()
 
-	myrouter := MyServer{http.NewServeMux()}
+	myrouter := controllers.MyServer{http.NewServeMux()}
 	myrouter.InitializeRoutes()
-	log.Fatal(http.ListenAndServe(":8080", myrouter.myrouters))
+	log.Fatal(http.ListenAndServe(":8080", myrouter.Myrouters))
 
 }
 
