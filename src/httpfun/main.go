@@ -8,8 +8,6 @@ import (
 	"os"
 	"os/signal"
 	"syscall"
-
-	"github.com/gorilla/mux"
 )
 
 func main() {
@@ -22,12 +20,10 @@ func main() {
 		os.Exit(1)
 	}()
 
-	//myrouter := controllers.MyServer{http.NewServeMux()}
-	myrouter := controllers.MyServer{mux.NewRouter()}
-	myrouter.InitializeRoutes()
+	myServer := controllers.InitializeRoutes()
 	fmt.Printf("http server is up on http://localhost:8080\n")
-	http.Handle("/", myrouter.Myrouters)
-	log.Fatal(http.ListenAndServe(":8080", myrouter.Myrouters))
+
+	log.Fatal(http.ListenAndServe(":8080", myServer))
 
 }
 
