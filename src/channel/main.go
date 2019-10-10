@@ -2,17 +2,16 @@ package main
 
 import (
 	"fmt"
-	
 )
 
 func main() {
-	
+
 	intc := make(chan int)
 	go todo(intc)
 	for {
 		value, ok := <-intc
 		if !ok {
-			//	fmt.Println("get ", value, ok)
+			fmt.Println("get ", value, ok)
 			break
 		}
 		fmt.Println("get ", value, ok)
