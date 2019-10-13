@@ -21,7 +21,7 @@ type jsonString struct {
 
 func (th timeHandler) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 	tm := time.Now().Format(th.format)
-	w.Write([]byte("The time is : " + tm))
+	w.Write([]byte("The current time is : " + tm))
 }
 
 // Person Firstname is person first name
